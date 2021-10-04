@@ -45,6 +45,4 @@ if __name__ == "__main__":
     for text_path in text_paths:
         text = text_path.read_text(encoding='utf8')
         tokenized_text += tokenize_text(text, wt, rules)
-        break
-    #normalized_text = normalize_text(tokenized_text)
     Path(f'./tokenize_bo_text/{text_path.stem}.txt').write_text(tokenized_text)
