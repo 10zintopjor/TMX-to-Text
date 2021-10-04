@@ -1,4 +1,4 @@
-from translate.storage.tmx import tmxfile
+import re
 from pathlib import Path
 from bs4 import BeautifulSoup
 
@@ -29,8 +29,14 @@ def parse_tmx(tmx_content, src_lang='bo', target_lang='en'):
 
 
 if __name__ == "__main__":
-    tmx = Path('./tmx/sample.tmx').read_text(encoding='utf-8')
-    bi_text = parse_tmx(tmx)
-    Path('./bo_text/bo.txt').write_text(bi_text['bo'])
-    Path('./en_text/en.txt').write_text(bi_text['en'])
+    tmx_paths = list(Path('./tmx').iterdir())
+    for tmx_path in tmx_paths:
+        tmx = tmx_path.read_text(encoding='utf-8')
+        bi_text = parse_tmx(tmx)
+        tib_text = bi_text['bo']
+        eng_text = bi_text['en']
+        eng_text = re.sub('\d+', '', eng_text)
+        eng_text = eng_text.replace('[]', '')
+        Path(f'./bo_text/{tmx_path.stem}.txt').write_text(tib_text)
+        Path(f'./en_text/{tmx_path.stem}.txt').write_text(eng_text)
     

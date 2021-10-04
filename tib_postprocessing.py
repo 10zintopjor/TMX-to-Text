@@ -14,7 +14,7 @@ def tokenize_line(line, wt):
         str: tokenized line
     """
     new_line = ''
-    tokens = wt.tokenize(line, split_affixes=False)
+    tokens = wt.tokenize(line, split_affixes=True)
     for token in tokens:
         new_line += f'{token.text} '
     new_line = new_line.replace('!', '')
