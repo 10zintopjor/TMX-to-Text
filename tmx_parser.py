@@ -9,8 +9,10 @@ def parse_segment(multilingual_segment, src_lang, target_lang):
     for segment in segments:
         seg_text = segment.find("seg").text if segment.find("seg").text else '-----'
         if segment.get("xml:lang", "") == src_lang:
+            src_seg = seg_text.replace('\n', '')
             src_seg = seg_text.strip() + '\n'
         elif segment.get("xml:lang", "") == target_lang:
+            target_seg = seg_text.replace('\n', '')
             target_seg = seg_text.strip() + '\n'
     return [src_seg, target_seg]
 
