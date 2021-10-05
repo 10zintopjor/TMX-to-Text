@@ -39,6 +39,8 @@ if __name__ == "__main__":
         eng_text = bi_text['en']
         eng_text = re.sub('\d+', '', eng_text)
         eng_text = eng_text.replace('[]', '')
+        eng_text = eng_text.replace('()', '')
+        eng_text = eng_text.replace(r'{}', '')
         Path(f'./bo_text/{tmx_path.stem}.txt').write_text(tib_text)
         Path(f'./en_text/{tmx_path.stem}.txt').write_text(eng_text)
     

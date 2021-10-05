@@ -19,8 +19,11 @@ def tokenize_line(line, wt, rules):
     new_line = ''
     tokens = wt.tokenize(line, split_affixes=True)
     for token in tokens:
-        new_line += f'{token.text} '
-    new_line = new_line.replace('!', '')
+        if token.pos == "PUNCT" or token.pos == "PART":
+            continue
+        new_line += f'{token.lemma} '
+    # new_line = re.sub(r'-\S*', '', new_line)
+    new_line = new_line.strip()
     normalized_line = normalize_line(new_line, rules)
     return normalized_line
 
@@ -42,7 +45,7 @@ if __name__ == "__main__":
     tokenized_text = ''
     regex_file = Path('./regex.txt')
     rules = get_regex_pairs(regex_file.open(encoding="utf-8-sig").readlines())
-    for text_path in text_paths:
+    for text_path in text_paths[:2]:
         text = text_path.read_text(encoding='utf8')
         tokenized_text += tokenize_text(text, wt, rules)
     Path(f'./tokenize_bo_text/{text_path.stem}.txt').write_text(tokenized_text)
