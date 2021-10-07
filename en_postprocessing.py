@@ -6,13 +6,13 @@ def tokenize_line(line, nlp):
     normalized_line = ''
     doc = nlp(line)
     for token in doc:
-        if token.is_punct:
-        # if token.is_stop or token.is_punct:
+        # if token.is_punct:
+        if token.is_stop or token.is_punct:
             continue
         # normalized_line += f'{token.lemma_.lower()} '
         # normalized_line += f'{token.lower_} '
-        # normalized_line += f'{token.text_with_ws}'
-        normalized_line += f'{token.norm_} '
+        normalized_line += f'{token.text} '
+        # normalized_line += f'{token.norm_} '
     normalized_line = normalized_line.strip()
     return normalized_line + '\n'
 
@@ -37,10 +37,10 @@ if __name__ == "__main__":
     # Path('./normalized/en/en_corpus-punct-stopword_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct-stopword_lemma_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct-stopword_norm.txt').write_text(corpus, encoding='utf-8')
-    # Path('./normalized/en/en_corpus-punct-stopword_text.txt').write_text(corpus, encoding='utf-8')
+    Path('./normalized/en/en_corpus-punct-stopword_text.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct_text.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct_lemma_lower.txt').write_text(corpus, encoding='utf-8')
-    Path('./normalized/en/en_corpus-punct_norm.txt').write_text(corpus, encoding='utf-8')
+    # Path('./normalized/en/en_corpus-punct_norm.txt').write_text(corpus, encoding='utf-8')
 
 
     
