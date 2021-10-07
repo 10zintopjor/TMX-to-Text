@@ -1,27 +1,31 @@
 import spacy
+import logging
 from pathlib import Path
 from horology import timed
+
+logging.basicConfig(filename="en_norm.log", level=logging.DEBUG, filemode="w")
 
 def tokenize_line(line, nlp):
     normalized_line = ''
     doc = nlp(line)
     for token in doc:
-        # if token.is_punct:
-        if token.is_stop or token.is_punct:
+        if token.is_punct:
+        # if token.is_stop or token.is_punct:
             continue
         # normalized_line += f'{token.lemma_.lower()} '
-        # normalized_line += f'{token.lower_} '
-        normalized_line += f'{token.text} '
+        normalized_line += f'{token.lower_} '
+        # normalized_line += f'{token.text} '
         # normalized_line += f'{token.norm_} '
     normalized_line = normalized_line.strip()
     return normalized_line + '\n'
 
 @timed(unit='min', name='Tokenizing took ')
-def tokenize_text(text, nlp):
+def tokenize_text(text_name, text, nlp):
     tokenized_text = ''
     lines = text.splitlines()
     for line in lines:
         tokenized_text += tokenize_line(line,nlp)
+    logging.info(f'Number of lines in text {text_name} is {len(lines)}')
     return tokenized_text
 
 
@@ -32,12 +36,14 @@ if __name__ == "__main__":
     corpus = ''
     for text_path in text_paths:
         text = text_path.read_text(encoding='utf8')
-        corpus += tokenize_text(text,nlp)
+        corpus += tokenize_text(text_path.stem, text,nlp)
         print(f'{text_path.stem} completed')
+        
     # Path('./normalized/en/en_corpus-punct-stopword_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct-stopword_lemma_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct-stopword_norm.txt').write_text(corpus, encoding='utf-8')
-    Path('./normalized/en/en_corpus-punct-stopword_text.txt').write_text(corpus, encoding='utf-8')
+    # Path('./normalized/en/en_corpus-punct-stopword_text.txt').write_text(corpus, encoding='utf-8')
+    Path('./normalized/en/en_corpus-punct_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct_text.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct_lemma_lower.txt').write_text(corpus, encoding='utf-8')
     # Path('./normalized/en/en_corpus-punct_norm.txt').write_text(corpus, encoding='utf-8')
