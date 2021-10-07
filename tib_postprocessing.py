@@ -4,6 +4,7 @@ from botok.modifytokens.splitaffixed import split_affixed
 from botok.tokenizers.wordtokenizer import WordTokenizer
 from pybo.utils.regex_batch_apply import batch_apply_regex, get_regex_pairs
 from pathlib import Path
+from horology import timed
 
 
 def tokenize_line(line, wt, rules):
@@ -19,14 +20,16 @@ def tokenize_line(line, wt, rules):
     new_line = ''
     tokens = wt.tokenize(line, split_affixes=True)
     for token in tokens:
-        if token.pos == "PUNCT" or token.pos == "PART":
+        if token.pos == "PUNCT" or token.pos == "PART" or token.chunk_type == 'PUNCT':
+        # if token.pos == "PUNCT" or token.chunk_type == 'PUNCT':
             continue
-        new_line += f'{token.lemma} '
-    # new_line = re.sub(r'-\S*', '', new_line)
+        # new_line += f'{token.lemma} '
+        new_line += f'{token.text} '
     new_line = new_line.strip()
     normalized_line = normalize_line(new_line, rules)
     return normalized_line
 
+@timed(unit='min', name='Tokenizing took ')
 def tokenize_text(text, wt, rules):
     new_text = ''
     lines = text.splitlines()
@@ -45,7 +48,10 @@ if __name__ == "__main__":
     tokenized_text = ''
     regex_file = Path('./regex.txt')
     rules = get_regex_pairs(regex_file.open(encoding="utf-8-sig").readlines())
-    for text_path in text_paths[:2]:
+    for text_path in text_paths:
         text = text_path.read_text(encoding='utf8')
         tokenized_text += tokenize_text(text, wt, rules)
-    Path(f'./tokenize_bo_text/{text_path.stem}.txt').write_text(tokenized_text)
+    # Path(f'./normalized/bo/bo_corpus-punct-part_lemma.txt').write_text(tokenized_text)
+    Path(f'./normalized/bo/bo_corpus-punct-part_text.txt').write_text(tokenized_text)
+    # Path(f'./normalized/bo/bo_corpus-punct_text.txt').write_text(tokenized_text)
+    # Path(f'./normalized/bo/bo_corpus-punct_lemma.txt').write_text(tokenized_text)
