@@ -20,7 +20,7 @@ def get_sentences(text):
 def serialize_sentence(sentence, rules):
     new_line = ''
     for token in sentence:
-        new_line += f'{token.lemma} '
+        new_line += f'{token.text} '
     new_line = new_line.strip()
     normalized_line = normalize_line(new_line, rules)
     return normalized_line
